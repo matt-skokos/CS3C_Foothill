@@ -6,25 +6,27 @@ def parChecker(symbolString):
     Uses the Stack() class to check for balanced input, returns True if
     balanced and False if not
      """
-    s = Stack()
+    stack1 = Stack()
     balanced = True
     index = 0
     while index < len(symbolString) and balanced:
         symbol = symbolString[index]
         try:
             if symbol in "([{":
-                s.push(symbol)
+                stack1.push(symbol)
+            # if symbol in "}])":
+            #     stack1.pop()
             else:
-                if s.isEmpty():
+                if stack1.isEmpty():
                     balanced = False
                 else:
-                    top = s.pop()
+                    top = stack1.pop()
                     if not matches(top, symbol):
                         balanced = False
         except ValueError:
             return False
         index = index + 1
-    if balanced and s.isEmpty():
+    if balanced and stack1.isEmpty():
         return True
     else:
         return False

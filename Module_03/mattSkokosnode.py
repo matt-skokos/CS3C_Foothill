@@ -1,6 +1,4 @@
 class Node:
-    validParamList = "(){}[]"
-
     def __init__(self, value):
         self.value = value
         self.next = None
@@ -12,19 +10,12 @@ class Node:
         return self.next
 
     def setValue(self, newValue):
-        if isinstance(newValue, str) and \
-                newValue in Node.validParamList:
+        if isinstance(newValue, str):
             self.value = newValue
 
     def setNext(self, newNext):
-        if isinstance(newNext, str) and \
-                newNext in Node.validParamList:
+        if isinstance(newNext, str):
             self.next = newNext
-
-    @staticmethod
-    def validateParameter(node):
-        """ Validate parameter data. """
-        return node.value in Node.validParamList
 
     @staticmethod
     def checkNodeNext(node):
