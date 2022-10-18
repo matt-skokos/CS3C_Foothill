@@ -29,22 +29,15 @@ def parChecker(symbolString):
     else:
         return False
 
-
 def matches(open, close):
     opens = "([{"
     closers = ")]}"
     return opens.index(open) == closers.index(close)
 
 
-def main():
-    stack1 = Stack()
-    print(parChecker('{({([][])}())}'))
-    print(parChecker('[{()]'))
+print(parChecker('{({([][])}())}'))
+print(parChecker('[{()]'))
 
-    print(parChecker('([|)]'))
-    print(parChecker('{{([][])}()}'))
-    print(parChecker('{{([][])}()}'))
-
-
-if __name__ == "__main__":
-    main()
+print(parChecker('([|)]'))
+print(parChecker('{{([][])}()}'))
+print(parChecker('{{([][])}()}'))
