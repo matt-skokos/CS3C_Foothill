@@ -2,12 +2,14 @@
 1.  These are two different helper methods used in the validation process right?
     Is the node pointing
 
+    setter must change last node from pointing to previous target, to the
+    new node
 """
 
 class Node:
-    def __init__(self, value):
+    def __init__(self, _next, value=None):
         self.value = value
-        self.next = None
+        self.next = _next
 
     def getValue(self):
         return self.value
@@ -35,6 +37,7 @@ class Node:
     def validateParam(param):
         """ Validate proper input received by setter ( str )."""
         return isinstance(param, str)
+
     @staticmethod
     def checkNodeNext(node):
         """ Validate that node points to another node ( not None )."""

@@ -9,17 +9,41 @@ Auxiliary Space: O(N), where N is the size of the stack
 """
 from mattSkokosnode import Node
 
+class isEmptyError(Exception):
+    """Will raise if empty stack is detected while attempting
+    operations.
+    """
+    pass
 
 class Stack:
-    def __init__(self):
-        self.head = 'data'
-        self.stack = []
+    def __init__(self, nodes=None):
+        self.head = None
+        self.size = 0
+        if nodes is not None:
+            node = Node(data=nodes.pop(0))
+            self.head = node
+            for element in nodes:
+                node.next = Node(data=element)
+                node = node.next
 
-    def push(self, item):
-        self.stack.append(item)
+
+    def push(self, node):
+        #if list is empty, make a node
+        if self.head is None:
+            self.head = node
+            return
+        # if list has items, append behind the last one
+        for current_node in self:
+            pass
+        current_node.next = node
+        self.head = Node(node)
+        self.size += 1
+
+        # self.stack.append(item)
 
     def pop(self):
         if self.isEmpty():
+            raise isEmptyError("Stack is empty, cannot pop an item.")
             return False
         else:
             return self.pop()
@@ -31,10 +55,12 @@ class Stack:
             return self.stack[:-1]
 
     def isEmpty(self):
-        if self.head is None:
-            return True
-        else:
-            return False
+        return self.size == 0
+        # if len(self.stack) == 0:
+        #     raise Exception('Linked List is empty')
+        #     return True
+        # else:
+        #     return False
 
     @classmethod
     def createStack(cls, name):
