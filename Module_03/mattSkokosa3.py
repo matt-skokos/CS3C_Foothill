@@ -1,7 +1,7 @@
 from mattSkokosstack import Stack
 
 
-def parChecker(symbolString):
+def check_symbol_balanced(symbolString):
     """Will take in a string consisting of 3 types of braces: {} [] ().
     Uses the Stack() class to check for balanced input, returns True if
     balanced and False if not
@@ -40,12 +40,13 @@ def matches(open, close):
 
 def main():
     stack1 = Stack()
-    print(parChecker('{({([][])}())}'))
-    print(parChecker('[{()]'))
+    # stack1.createStack('name')
+    print(check_symbol_balanced('{({([][])}())}'))
+    print(check_symbol_balanced('[{()]'))
 
-    print(parChecker('([|)]'))
-    print(parChecker('{{([][])}()}'))
-    print(parChecker('{{([][])}()}'))
+    print(check_symbol_balanced('([|)]'))
+    print(check_symbol_balanced('{{([][])}()}'))
+    print(check_symbol_balanced('{{([][])}()}'))
 
 
 if __name__ == "__main__":
