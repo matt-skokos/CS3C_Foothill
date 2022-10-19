@@ -7,12 +7,13 @@
 """
 
 class Node:
-    def __init__(self, _next, value=None):
-        self.value = value
+    def __init__(self, _next, data=None):
         self.next = _next
+        self.data = data
+
 
     def getValue(self):
-        return self.value
+        return self.data
 
     def getNext(self):
         return self.next
@@ -25,9 +26,10 @@ class Node:
         else:
             return False
 
+# Check this out again
     def setNext(self, newNext):
         """ Set 'next' node value. """
-        if self.validateParam(newNext):
+        if self.checkNodeNext(newNext):
             self.next = newNext
             return True
         else:
