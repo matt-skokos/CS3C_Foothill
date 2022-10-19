@@ -13,9 +13,11 @@ class Node:
 
 
     def getValue(self):
+        """ Return Node data. """
         return self.data
 
     def getNext(self):
+        """ Return Node pointer value. """
         return self.next
 
     def setValue(self, newValue):

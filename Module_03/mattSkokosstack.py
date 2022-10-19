@@ -6,6 +6,9 @@ class isEmptyError(Exception):
 
 
 class Stack:
+    """ Stack object composed of Nodes.  Available methods described
+    below.
+    """
 
     def __init__(self, head=None, data=None):
         self.data = None
@@ -20,6 +23,7 @@ class Stack:
         self.size += 1
 
     def pop(self):
+        """ Pop the top value from the stack. """
         if self.isEmpty():
             raise isEmptyError("Stack is empty, cannot pop an item.")
             return False
@@ -30,6 +34,7 @@ class Stack:
             return temp
 
     def peek(self):
+        """ Return top value, leave stack unchanged. """
         if self.isEmpty():
             raise isEmptyError("Stack is empty, cannot peek an item.")
             return False
@@ -37,14 +42,16 @@ class Stack:
             return self.head.getValue()
 
     def isEmpty(self):
+        """ Returns boolean value of True if stack has no nodes. """
         return self.size == 0
-    # or head == None
 
     @classmethod
     def createStack(cls, name):
+        """ Class method to create Stack() object. """
         name = Stack()
         return name
 
     def deleteStack(self, name):
+        """ Clears the contents of given Stack(). """
         name.clear()
 
