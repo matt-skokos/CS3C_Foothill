@@ -1,0 +1,297 @@
+"""
+Matt Skokos - Foothill College : CS3C
+Lab Assignment #7 : Binary Tree
+Date: 11-22-2022
+Description: This .py file has two classes: TreeNode and BinarySearchTree
+which will work together to implement the nodes and structure of a
+binary search tree.  There are inorder, postorder and preorder traversals
+as well as a get_max() with recursive helper.
+"""
+
+
+class TreeNode:
+
+    def __init__(self, key, left=None, right=None):
+        self.left_child = left
+        self.right_child = right
+        self.key = key
+        self.parent = None
+
+    def has_left_child(self):
+        """ Returns the left child if it exists, False if not. """
+        return self.left_child
+
+    def has_right_child(self):
+        """ Returns the right child if it exists, False if not. """
+        return self.right_child
+
+    def is_left_child(self):
+        """ Checks for left child. """
+        return self.parent and self.parent.left == self
+
+    def is_right_child(self):
+        """ Checks for right child. """
+        return self.parent and self.parent.right == self
+
+    def is_root(self):
+        """ Checks if node is root node."""
+        return not self.parent
+
+    def is_leaf(self):
+        """ Checks if node is a leaf. """
+        return not (self.right_child or self.left_child)
+
+    def has_any_children(self):
+        """ Checks node for having any children. """
+        return self.right_child or self.left_child
+
+    def has_both_children(self):
+        """ Checks if node has both children. """
+        return self.right_child and self.left_child
+
+    def splice_out(self):
+        """ Goes directly to the node we want to splice out and makes
+        the correct changes.
+        """
+        if self.is_leaf():
+            if self.is_left_child():
+                self.parent.left = None
+            else:
+                self.parent.right = None
+        elif self.has_any_children():
+            if self.has_left_child():
+                if self.is_left_child():
+                    self.parent.left_child = self.left_child
+                else:
+                    self.parent.right_child = self.left_child
+                self.left_child.parent = self.parent
+            else:
+                if self.is_left_child():
+                    self.parent.left_child = self.right_child
+                else:
+                    self.parent.right_child = self.right_child
+                self.right_child.parent = self.parent
+
+    def find_successor(self):
+        """ Finds a node that will preserve the binary search tree
+        relationships.
+         """
+        succ = None
+        if self.has_right_child():
+            succ = self.right_child.find_min()
+        else:
+            if self.parent:
+                if self.is_left_child():
+                    succ = self.parent
+                else:
+                    self.parent.right = None
+                    succ = self.parent.find_successor()
+                    self.parent.right = self
+        return succ
+
+    def find_min(self):
+        """ Helper method for finding min. child node. """
+        current = self
+        while current.has_left_child():
+            current = current.left
+        return current
+
+    # def find_max(self):
+    # """ Helper to find max if it's ever needed. """
+    #     current = self
+    #     while current.has_right_child():
+    #         current = current.right_child
+    #     return current
+
+    def replace_node_data(self, key, lc, rc):
+        """ Replaces data in node. """
+        self.key = key
+        self.left_child = lc
+        self.right_child = rc
+        if self.has_left_child():
+            self.left_child.parent = self
+        if self.has_right_child():
+            self.right_child.parent = self
+
+
+class BinarySearchTree:
+
+    def __init__(self):
+        self.root = None
+        self.size = 0
+
+    def insert(self, key):
+        """ Insert key value into a node. """
+        if self.root is None:
+            self.size += 1
+            self.root = TreeNode(key)
+        else:
+            self._insert(key, self.root)
+            self.size += 1
+
+    def _insert(self, key, current_node):
+        """ Recursive insert helper. """
+        if key < current_node.key:
+            if current_node.left_child is None:
+                current_node.left_child = TreeNode(key)
+                current_node.left_child.parent = current_node  # set parent
+            else:
+                self._insert(key, current_node.left_child)
+        elif key > current_node.key:
+            if current_node.right_child is None:
+                current_node.right_child = TreeNode(key)
+                current_node.right_child.parent = current_node  # set parent
+            else:
+                self._insert(key, current_node.right_child)
+        else:
+            print("key already in tree!")
+
+    def height(self):
+        """Returns height if BST is empty, or calls recursive height. """
+        if self.root is not None:
+            return self._height(self.root, 0)
+        else:
+            return 0
+
+    def _height(self, current_node, current_height):
+        """Recursive height function."""
+        if current_node is None:
+            return current_height
+        left_height = self._height(current_node.left_child,
+                                   current_height + 1)
+        right_height = self._height(current_node.right_child,
+                                    current_height + 1)
+        return max(left_height, right_height)
+
+    def find(self, key):
+        """Search BST for node with key value. """
+        if self.root is not None:
+            return self._find(key, self.root)
+        else:
+            return None
+
+    def _find(self, key, current_node):
+        """Recursive search of BST. """
+        if key is current_node.key:
+            return current_node  # returns node, can also return key with .key
+        elif key < current_node.key and \
+                current_node.left_child is not None:
+            return self._find(key, current_node.left_child)
+        elif key > current_node.key and \
+                current_node.right_child is not None:
+            return self._find(key, current_node.right_child)
+
+    def delete(self, key):
+        """Public delete method calls remove(). """
+        if self.size > 1:
+            node_to_remove = self._find(key, self.root)
+            print(type(node_to_remove))
+            if node_to_remove:
+                self.remove(node_to_remove)
+                self.size = self.size - 1
+            else:
+                raise KeyError('Error, key not in tree')
+        elif self.size == 1 and self.root.key == key:
+            self.root = None
+            self.size = self.size - 1
+        else:
+            raise KeyError('Error, key not in tree')
+
+    def remove(self, current_node):
+        """Remove item from BST. """
+        if current_node.is_leaf():  # leaf
+            if current_node == current_node.parent.left_child:
+                current_node.parent.left_child = None
+            else:
+                current_node.parent.right_child = None
+        elif current_node.has_both_children():  # interior
+            succ = current_node.find_successor()
+            succ.splice_out()
+            current_node.key = succ.key
+
+        else:  # node has one child
+            if current_node.has_left_child():
+                if current_node.is_left_child():
+                    current_node.left_child.parent = current_node.parent
+                    current_node.parent.left_child = current_node.left_child
+                elif current_node.is_right_child():
+                    current_node.left_child.parent = current_node.parent
+                    current_node.parent.right_child = current_node.left_child
+                else:
+                    current_node.replace_node_data(current_node.left_child.key,
+                                                   current_node.left_child.left_child,
+                                                   current_node.left_child.right_child
+                                                   )
+            else:
+                if current_node.is_left_child():
+                    current_node.right_child.parent = current_node.parent
+                    current_node.parent.left_child = current_node.right_child
+                elif current_node.is_right_child():
+                    current_node.right_child.parent = current_node.parent
+                    current_node.parent.right_child = current_node.right_child
+                else:
+                    current_node.replace_node_data(current_node.right_child.key,
+                                                   current_node.right_child.left_child,
+                                                   current_node.right_child.right_child)
+
+    def __delitem__(self, key):
+        self.delete(key)
+
+    def inorder(self):
+        """ Inorder traversal of BST. """
+        if self.root is not None:
+            self._inorder(self.root)
+
+    def _inorder(self, current_node):
+        """ Recursive inorder traversal of BST. """
+        if current_node is not None:
+            self._inorder(current_node.left_child)
+            print(str(current_node.key), end=" ")
+            self._inorder(current_node.right_child)
+
+    def preorder(self):
+        """ Postorder traversal of BST. """
+        if self.root is not None:
+            self._preorder(self.root)
+
+    def _preorder(self, current_node):
+        """ Recursive preorder traversal of BST. """
+        if current_node is not None:
+            print(str(current_node.key), end=" ")
+            self._preorder(current_node.left_child)
+            self._preorder(current_node.right_child)
+
+    def postorder(self):
+        """ Postorder traversal of BST. """
+
+        if self.root is not None:
+            self._preorder(self.root)
+
+    def _postorder(self, current_node):
+        """ Recursive postorder traversal of BST. """
+        if current_node is not None:
+            self._postorder(current_node.left_child)
+            self._postorder(current_node.right_child)
+            print(str(current_node.key), end=" ")
+
+    def get_max(self):
+        """ Get max BST function. """
+        if self.root is None:
+            return self
+        else:
+            return self._get_max(self.root)
+
+    def _get_max(self, current_node):
+        """ Recursive find max value in BST. """
+        # note two recursions are occurring
+        negative_infinity = float('-inf')
+        if current_node is None:
+            return negative_infinity
+        res = current_node.key
+        lres = self._get_max(current_node.left_child)
+        rres = self._get_max(current_node.right_child)
+        if lres > res:
+            res = lres
+        if rres > res:
+            res = rres
+        return res
