@@ -1,0 +1,7 @@
+"""
+In4matx 43b git hub demo
+"""
+
+string1 = "Hello 43B!"
+for x in string1:
+  print(string1[x])
